@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0053)file:///C:/Users/caree/Downloads/love-code%20(1).html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>My Love Code</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&family=Quicksand:wght@500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="./love-code (1)_files/css2" rel="stylesheet">
 <style>
   html, body {
     margin: 0;
@@ -110,20 +110,58 @@
   #replayBtn.show:active {
     opacity: 1;
   }
+  #musicBtn {
+    position: fixed;
+    top: 4%;
+    right: 5%;
+    z-index: 8;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,180,205,0.35);
+    background: rgba(20,4,10,0.4);
+    backdrop-filter: blur(4px);
+    color: #ffb8ce;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+  #musicBtn.show {
+    opacity: 0.75;
+    pointer-events: auto;
+  }
+  #musicBtn.show:active {
+    opacity: 1;
+  }
+  #ytPlayer {
+    position: fixed;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
 </style>
 </head>
 <body>
 
-<canvas id="bokeh"></canvas>
-<canvas id="rain"></canvas>
-<div id="glow"></div>
-<div id="scene">
-  <canvas id="text"></canvas>
+<canvas id="bokeh" width="630" height="889"></canvas>
+<canvas id="rain" width="630" height="889"></canvas>
+<div id="glow" style="opacity: 1;"></div>
+<div id="scene" class="breathe">
+  <canvas id="text" width="630" height="889"></canvas>
 </div>
-<canvas id="fx"></canvas>
+<canvas id="fx" width="630" height="889"></canvas>
 <div id="vignette"></div>
-<div id="tap">tap to send a kiss</div>
-<div id="replayBtn">replay</div>
+<div id="tap" class="show">tap to send a kiss</div>
+<div id="replayBtn" class="show">replay</div>
+<div id="musicBtn" class="show">🔊</div>
+<audio id="bgMusic" src="music.mp3" loop=""></audio>
 
 <script>
 /* ============ SEQUENCE — edit here ============ */
@@ -552,6 +590,11 @@ function resetSequence() {
 
 // Tap anywhere on the final scene = send a kiss (does NOT replay/reset)
 document.body.addEventListener('click', (e) => {
+  if (!musicStarted) {
+    bgMusic.play();
+    musicStarted = true;
+    musicBtn.textContent = '🔊';
+  }
   if (finalReached) {
     spawnKissBurst(e.clientX, e.clientY);
   }
@@ -562,7 +605,34 @@ replayBtn.addEventListener('click', (e) => {
   e.stopPropagation();
   resetSequence();
 });
+
+/* ---------------- BACKGROUND MUSIC: local music.mp3 ---------------- */
+const bgMusic = document.getElementById('bgMusic');
+let musicStarted = false;
+const musicBtn = document.getElementById('musicBtn');
+
+bgMusic.volume = 1;
+musicBtn.classList.add('show');
+musicBtn.textContent = '🔇';
+
+musicBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (!musicStarted) {
+    bgMusic.play();
+    musicStarted = true;
+    musicBtn.textContent = '🔊';
+  } else {
+    if (bgMusic.muted) {
+      bgMusic.muted = false;
+      musicBtn.textContent = '🔊';
+    } else {
+      bgMusic.muted = true;
+      musicBtn.textContent = '🔇';
+    }
+  }
+});
 </script>
 
-</body>
-</html>
+
+
+</body></html>
